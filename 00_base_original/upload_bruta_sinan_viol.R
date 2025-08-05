@@ -3,6 +3,7 @@ library(vitaltable)
 library(tidyverse)
 library(foreign)
 
+
 tictoc::tic()
 
 padroniza_data <- function(data_col) {
