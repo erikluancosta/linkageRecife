@@ -50,7 +50,7 @@ sinan_viol <- sinan_viol |>
     banco = "SINAN_VIOL",
     id_sinan_viol = row_number()
   ) |> 
-  select(id_sinan_viol, id_registro_linkage, id_unico, everything())
+  select(id_sinan_viol, id_unico, everything())
 
 # Lista de colunas a serem convertidas
 cols_to_convert <- c("DS_OBS", "NM_PACIENT", "NM_MAE_PAC", "REL_ESPEC", "NM_LOGRADO", "DS_COMPL",

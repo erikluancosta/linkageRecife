@@ -28,10 +28,9 @@ esus_aps <- esus_aps |>
   mutate(
     id_unico = paste0("ESUS_APS_", row_number(), "_", tba_co_unico_atend),
     banco = "ESUS_APS",
-    id_esus_aps = row_number(),
-    id_registro_linkage = -1, # será ajustada depois via script
+    id_esus_aps = row_number()
   ) |> 
-  select(id_esus_aps, id_registro_linkage, id_unico, everything())
+  select(id_esus_aps, id_unico, everything())
 
 
 

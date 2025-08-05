@@ -20,7 +20,7 @@ sinan_iexo <- sinan_iexo |>
     banco = "SINAN_IEXO",
     id_sinan_iexo = row_number()
   ) |> 
-  select(id_sinan_iexo, id_registro_linkage, id_unico, everything())
+  select(id_sinan_iexo, id_unico, everything())
 
 
 
