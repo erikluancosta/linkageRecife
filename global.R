@@ -8,7 +8,8 @@ library(dplyr)
 library(foreign)
 library(RPostgres)
 library(DBI)
-
+library(stringi)
+library(stringr)
 
 #---------------------------
 # Carregar a função de conexão
