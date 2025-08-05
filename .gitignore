@@ -6,4 +6,5 @@
 .httr-oauth
 .DS_Store
 .quarto
-00_base_original/dados
+.Renviron
+00_base_original/dados".Renviron" 
