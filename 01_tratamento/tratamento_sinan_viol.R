@@ -1,9 +1,4 @@
-library(DBI)
-library(RPostgres)
-library(tidyverse)
-library(vitallinkage)
-library(vitaltable)
-source('conectar/conectar.R')
+source('global.R')
 source('funcoes/namestand2.R')
 source('funcoes/ajuste_txt2.R')
 
