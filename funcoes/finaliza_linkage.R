@@ -29,14 +29,13 @@ finaliza_linkage <- function(df) {
 cria_base_registro <- function(df){
   
   base_registro <- df |> 
-    select(id_unico, id_pareamento, id_pessoa, banco, dt_evento_inicio, dt_evento_fim, dt_registro, recem_nasc) |> 
+    select(id_unico, id_pareamento, id_pessoa, banco, dt_nasc, dt_evento_inicio, dt_evento_fim, dt_registro, recem_nasc) |> 
     mutate(
       recem_nasc = as.numeric(recem_nasc), # garante que recem_nasc é numérico
-      recem_nasc = case_when(
-        recem_nasc == 1 ~ NA_real_,
-        is.na(recem_nasc) ~ 1,
-        TRUE ~ recem_nasc
-      )
-    )
+      across(starts_with("dt_"), ~ as.Date(.)),
+      id_registro_linkage = row_number()
+    ) |> 
+    select(id_registro_linkage, everything())
+  
   return(base_registro)
 }
