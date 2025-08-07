@@ -10,6 +10,8 @@ library(RPostgres)
 library(DBI)
 library(stringi)
 library(stringr)
+library(lubridate)
+
 
 #---------------------------
 # Carregar a função de conexão
