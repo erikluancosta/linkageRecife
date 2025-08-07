@@ -359,7 +359,7 @@ df <- df |>
     c('mae_menos5d', 'nome_5_12','ano_nasc' ,'dia_nasc', "nu_cns",'nao_recem_nasc'),
     55)
 
-# NOVOS TESTES
+# NOVOS TESTES - FALTA VALIDAR
 df <- df |> 
   regras_linkage_dt(
     c('ds_nome_pac1', 'ds_nome_pac2', 'dt_nasc','ds_nome_mae2', 'ds_nome_mae3', 'ds_nome_mae1_sound'),
@@ -386,4 +386,9 @@ df <- df |>
   )
 tictoc::toc()
 
+source('funcoes/finaliza_linkage.R')
+
+df <- df |> finaliza_linkage()
+
+base_registro <- df |> cria_base_registro()
 
