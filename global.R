@@ -16,3 +16,4 @@ library(stringr)
 #---------------------------
 source('conectar/conectar.R')
 con <- conectar('linkage2')
+rm(conectar)
