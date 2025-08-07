@@ -1,11 +1,9 @@
 source('global.R')
 source('funcoes/namestand2.R')
 
-# Configurar a conexão ao banco de dados PostgreSQL
-con <- conectar('linkage2')
 
 # Carregar os dados do banco de dados
-esus_aps <- dbGetQuery(con, "SELECT * FROM original_esus_aps")
+esus_aps <- dbGetQuery(con, "SELECT * FROM original_esus_aps_2")
 
 # Tratamento
 esus_aps <- esus_aps |> 
@@ -45,7 +43,7 @@ esus_aps <- esus_aps |>
 #    ds_sexo = factor(ds_sexo, levels = c("M", "F"))
   )
 
-
+esus_aps <- esus_aps |> select(id_esus_aps, id_registro_linkage, id_unico, everything()) |> arrange(id_esus_aps)
 vitaltable::tab_1(esus_aps,ds_sexo)
 #-----------------------------------
 # Adicionar ao banco de dados
@@ -54,7 +52,7 @@ vitaltable::tab_1(esus_aps,ds_sexo)
 # 1. ‑‑ Cria somente a estrutura (0 linhas) -----------------------------
 dbWriteTable(
   conn      = con,
-  name      = SQL("tratado_esus_aps_view"),   # use SQL() para preservar maiúsculas/minúsculas
+  name      = SQL("tratado_esus_aps_2"),   # use SQL() para preservar maiúsculas/minúsculas
   value     = esus_aps[0, ],              # dataframe zerado, mantém tipos
   overwrite = TRUE,                         # recria se já existir
   row.names = FALSE,
@@ -64,12 +62,12 @@ dbWriteTable(
 
 # 2. ‑‑ Ajusta tipos/constraints depois que a tabela existe -------------
 dbExecute(con, "
-  ALTER TABLE tratado_esus_aps_view 
+  ALTER TABLE tratado_esus_aps_2 
     ADD PRIMARY KEY (id_esus_aps)
 ")
 
 
 # 3. ‑‑ Insere o conteúdo real (mantém o esquema) -----------------------
 tictoc::tic()
-dbAppendTable(con, "tratado_esus_aps_view", esus_aps)
+dbAppendTable(con, "tratado_esus_aps_2", esus_aps)
 tictoc::toc()

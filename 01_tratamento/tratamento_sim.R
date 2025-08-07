@@ -1,5 +1,6 @@
 source('global.R') # a conexão já é montada aqui
 source('funcoes/ajuste_txt2.R')
+source('funcoes/namestand2.R')
 
 # Carregar os dados do banco de dados
 sim <- dbGetQuery(con, "SELECT * FROM original_sim")
