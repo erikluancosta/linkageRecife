@@ -33,8 +33,6 @@ esus_aps <- esus_aps |>
   select(id_esus_aps, id_unico, everything())
 
 
-
-
 #-----------------------------------
 # Conexão com o banco de dados
 #-----------------------------------
