@@ -359,31 +359,6 @@ df <- df |>
     c('mae_menos5d', 'nome_5_12','ano_nasc' ,'dia_nasc', "nu_cns",'nao_recem_nasc'),
     55)
 
-# NOVOS TESTES - FALTA VALIDAR
-df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac1', 'ds_nome_pac2', 'dt_nasc','ds_nome_mae2', 'ds_nome_mae3', 'ds_nome_mae1_sound'),
-    56
-  )
-
-
-df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac_sound', 'dt_nasc', 'ds_nome_mae_sound', 'nao_recem_nasc'),
-    57
-  )
-
-df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac', 'ano_nasc', 'dia_nasc', 'ds_nome_mae1_sound', 'ds_nome_mae3', 'nao_recem_nasc', 'ignora_maria', 'ignora_francisca', "ignora_josefa"),
-    58
-  )
-
-df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac2', 'ds_nome_pac3','dt_nasc','ds_nome_mae', 'nu_cns', 'nao_recem_nasc'),
-    59
-  )
 tictoc::toc()
 
 source('funcoes/finaliza_linkage.R')
@@ -392,3 +367,26 @@ df <- df |> finaliza_linkage()
 
 base_registro <- df |> cria_base_registro()
 
+# Salvando os dados
+source('global.R')
+
+# 1. ‑‑ Cria somente a estrutura (0 linhas) -----------------------------
+dbWriteTable(
+  conn      = con,
+  name      = SQL("processo_linkage"),   # use SQL() para preservar maiúsculas/minúsculas
+  value     = df[0, ],              # dataframe zerado, mantém tipos
+  overwrite = TRUE,                         # recria se já existir
+  row.names = FALSE#,
+ # field.types = c(id_unico = "BIGINT")
+)
+
+# 2. ‑‑ Ajusta tipos/constraints depois que a tabela existe -------------
+dbExecute(con, "
+  ALTER TABLE processo_linkage 
+    ADD PRIMARY KEY (id_unico)
+")
+
+# 3. ‑‑ Insere o conteúdo real (mantém o esquema) -----------------------
+tictoc::tic()
+dbAppendTable(con, "processo_linkage", df)
+tictoc::toc()
