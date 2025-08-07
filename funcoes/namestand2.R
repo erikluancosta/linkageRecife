@@ -16,19 +16,19 @@ namestand2 <- vitallinkage::namestand |>
         "SIH", "SIH", 
         "SINAN_VIOL", "SINAN_VIOL", 
         "SIM","SIM", "SIM",
-        "ESUS_APS","ESUS_APS", "ESUS_APS", "ESUS_APS", "ESUS_APS"
+        "ESUS_APS", "ESUS_APS", "ESUS_APS", "ESUS_APS"
       ),
       var_names_orig = c(
         "id_sih", "id_unico", 
         "id_sinan_viol","id_unico",
         "id_sim","id_unico", "DTATESTADO",
-        "id_esus_aps", "id_registro_linkage","id_unico", "nu_cnes", "enc_nu_cid10"
+        "id_esus_aps","id_unico", "nu_cnes", "enc_nu_cid10"
       ),
       stanard_name = c(
         "id_sih", "id_unico",
         "id_sinan_viol","id_unico", 
         "id_sim", "id_unico", "dt_atestado",
-        "id_esus_aps", "id_registro_linkage","id_unico", "nu_cnes", "enc_nu_cid10"
+        "id_esus_aps","id_unico", "nu_cnes", "enc_nu_cid10"
       )
     )
   ) |> 
