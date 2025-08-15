@@ -20,7 +20,7 @@ finaliza_linkage <- function(df) {
     rename(
       "id_pareamento" = par_1
     ) |> 
-    select(id_pessoa, id_pareamento, ds_nome_pac, dt_nasc, ds_nome_mae, nu_cns, banco, starts_with("par_c"), everything()) 
+    select(id_unico, id_pessoa, id_pareamento, ds_nome_pac, dt_nasc, ds_nome_mae, nu_cns, banco, starts_with("par_c"), everything()) 
   return(df)
   
 }

@@ -1,11 +1,13 @@
 source('global.R') # a conexão já é montada aqui
 source('funcoes/ajuste_txt2.R')
 source('funcoes/namestand2.R')
+source('funcoes/remove_duplicados_sim.R')
+source('funcoes/algoritmo.R')
 
 # Carregar os dados do banco de dados
 sim <- dbGetQuery(con, "SELECT * FROM original_sim")
 
-sim2 <- sim |> 
+sim <- sim |> 
   vitallinkage::upper_case_char() |>
   vitallinkage::padroniza_variaveis(namestand2,nome_base = "SIM") |> 
   vitallinkage::ajuste_data(tipo_data=1) |>
@@ -19,22 +21,15 @@ sim2 <- sim |>
         "^(RN |FM |FM1 |FM2 |FMI |FMII |IFM|RECEM NASCIDO|RN NASCIDO|NATIMORTO|NATIMORTI|FETO MORTO|FETO|MORTO|NASCIDO VIVO|VIVO|NASCIDO|SEM DOC|CADAVER|NATIMORTE|RECEM|IGNORADO|RECEM NASCIDO DE )", 
         ds_nome_pac), 1, NA),
     nu_cns = str_trim(case_when(
-      nu_cns == "000000000000000" ~ NA_character_,
-      nu_cns == "00000000000" ~ NA_character_,
-      nu_cns == "000000000" ~ NA_character_,
-      nu_cns == "00000000000000" ~ NA_character_,
-      nu_cns == "000000000000000" ~ NA_character_,
-      nu_cns == "000000000000001" ~ NA_character_,
-      nu_cns == "000000000000002" ~ NA_character_,
-      nu_cns == "000000000000003" ~ NA_character_,
-      nu_cns == "000000000000004" ~ NA_character_,
-      nu_cns == "000000000000005" ~ NA_character_,
-      nu_cns == "000000000000006" ~ NA_character_,
-      nu_cns == "000000000000007" ~ NA_character_,
-      nu_cns == "000000000000008" ~ NA_character_,
-      nu_cns == "000000000000009" ~ NA_character_,
-      nu_cns == "000000000000010" ~ NA_character_,
-      nu_cns == "000000000000011" ~ NA_character_,
+      nu_cns %in% c(
+        "000000000000000", "00000000000", "000000000",
+        "00000000000000", "000000000000000",
+        "000000000000001", "000000000000002", "000000000000003",
+        "000000000000004", "000000000000005", "000000000000006",
+        "000000000000007", "000000000000008", "000000000000009",
+        "000000000000010", "000000000000011"
+      ) ~ NA_character_,
+      str_starts(nu_cns, "0000000000") ~ NA_character_,  # qualquer CNS começando com 000000000000
       nu_cns == "" ~ NA_character_,
       TRUE ~ nu_cns
     ))
@@ -51,8 +46,16 @@ sim2 <- sim |>
   vitallinkage::soundex_linkage("ds_comple_res") |>
   mutate(across(ends_with("_res2"), ~ ifelse(. == "", NA, .))) |> 
   mutate(across(ends_with("_res2_sound"), ~ ifelse(. == "0000", NA, .))) |> 
-  vitallinkage::drop_duplicados_sim_padronizado() |> 
-  ## NOVAS VARIÁVEIS
+  remove_duplicados_sim()
+
+# Dataframe para o banco como tratado
+sim2 <- sim$data
+
+# Dataframe de dropados
+dropados_sim <- sim$drops
+
+
+sim2 <- sim2 |> 
   vitallinkage::ds_raca_sim() |> # Ajustando a raça/cor
   vitallinkage::corrige_sg_sexo() |> # Ajustando a variável sg_sexo
   vitallinkage::nu_idade_anos_sim() |> # Ajustanso a idade em anos
@@ -71,9 +74,6 @@ sim2 <- sim |>
   select(id_sim, id_registro_linkage, id_unico, everything()) |>
   arrange(id_sim)
 
-
-sim <- sim2
-rm(sim2)
 #-----------------------------------
 # Adicionar ao banco de dados
 #-----------------------------------
@@ -82,7 +82,7 @@ rm(sim2)
 dbWriteTable(
   conn      = con,
   name      = SQL("tratado_sim"),   # use SQL() para preservar maiúsculas/minúsculas
-  value     = sim[0, ],              # dataframe zerado, mantém tipos
+  value     = sim2[0, ],              # dataframe zerado, mantém tipos
   overwrite = TRUE,                         # recria se já existir
   row.names = FALSE,
   field.types = c(id_sim = "BIGINT",
@@ -97,6 +97,34 @@ dbExecute(con, "
 
 
 # 3. ‑‑ Insere o conteúdo real (mantém o esquema) -----------------------
-dbAppendTable(con, "tratado_sim", sim)
+dbAppendTable(con, "tratado_sim", sim2)
+
+
+# -----------------------------------------------------------------------
+# Upload da base de dropados
+# -----------------------------------------------------------------------
+dropados_sim <- dropados_sim |> 
+  select(id_sim, id_registro_linkage, id_unico, everything()) |>
+  arrange(id_sim)
+
+# 1. ‑‑ Cria somente a estrutura (0 linhas) -----------------------------
+dbWriteTable(
+  conn      = con,
+  name      = SQL("dropados_sim"),   # use SQL() para preservar maiúsculas/minúsculas
+  value     = dropados_sim[0, ],              # dataframe zerado, mantém tipos
+  overwrite = TRUE,                         # recria se já existir
+  row.names = FALSE,
+  field.types = c(id_sim = "BIGINT",
+                  id_registro_linkage = "BIGINT")
+)
+
+# 2. ‑‑ Ajusta tipos/constraints depois que a tabela existe -------------
+dbExecute(con, "
+  ALTER TABLE dropados_sim 
+    ADD PRIMARY KEY (id_sim)
+")
+
+# 3. ‑‑ Insere o conteúdo real (mantém o esquema) -----------------------
+dbAppendTable(con, "dropados_sim", dropados_sim)
 
 

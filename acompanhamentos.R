@@ -11,8 +11,10 @@ pareamentos <- linkadas |>
   #filter(banco == 'SIM') |> 
   select(par_1, banco) |> 
   group_by(par_1,banco) |> 
-  summarise(n = n()) |>
-  pivot_wider(names_from = banco, values_from = n, values_fill = 0)
+  summarise(n = n(), .groups = 'drop') |>
+  pivot_wider(names_from = banco, values_from = n, values_fill = 0) |> 
+  janitor::adorn_totals('col') |> 
+  janitor::adorn_totals('row')
 
 
-a <- df |> filter(is.na(id_pareamento))
+

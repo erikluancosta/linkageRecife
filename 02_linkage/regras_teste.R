@@ -1,25 +1,59 @@
-# NOVOS TESTES - FALTA VALIDAR
+# NOVOS TESTES - FALTA VALIDAR 
 df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac1', 'ds_nome_pac2', 'dt_nasc','ds_nome_mae2', 'ds_nome_mae3', 'ds_nome_mae1_sound'),
-    56
+  mutate(
+    pac_13 = substr(ds_nome_pac, 1, 13),
+    mae_13 = substr(ds_nome_mae, 1, 13),
   )
 
 
-df <- df |> 
-  regras_linkage_dt(
-    c('ds_nome_pac_sound', 'dt_nasc', 'ds_nome_mae_sound', 'nao_recem_nasc'),
-    57
-  )
 
 df <- df |> 
   regras_linkage_dt(
-    c('ds_nome_pac', 'ano_nasc', 'dia_nasc', 'ds_nome_mae1_sound', 'ds_nome_mae3', 'nao_recem_nasc', 'ignora_maria', 'ignora_francisca', "ignora_josefa"),
+    c('pac_13', 'mae_13', 'dia_nasc', 'mes_nasc', 'nu_cns'),
     58
   )
 
+df <-  df |> 
+  regras_linkage_dt(
+    c('ds_nome_pac', 'mae_13','dia_nasc', 'ano_nasc', 'nu_cns', 'nao_recem_nasc'),
+    59
+  )
+
+df <-  df |> 
+  regras_linkage_dt(
+    c('pac_13', 'mae_13','mes_nasc', 'ano_nasc', 'nu_cns', 'nao_recem_nasc'),
+    60
+  )
+
+
+
+df <-  df |> 
+  regras_linkage_dt(
+    c('pac_13', 'dt_nasc','ds_nome_mae_sound', 'nu_cns', 'nao_recem_nasc'),
+    61
+  )
+
 df <- df |> 
   regras_linkage_dt(
-    c('ds_nome_pac2', 'ds_nome_pac3','dt_nasc','ds_nome_mae', 'nu_cns', 'nao_recem_nasc'),
-    59
+    c('ds_nome_pac1', 'ds_nome_pac2_sound', 'dt_nasc', 'ds_nome_mae', 'nu_cns'),
+    62
+  )
+
+df <- df |> 
+  regras_linkage_dt(
+    c('ds_nome_pac1', 'dt_nasc', 'ds_nome_mae1', 'ds_nome_mae2', 'ds_bairro_res'),
+    63
+  )
+
+
+df <- df |> 
+  regras_linkage_dt(
+    c('ds_nome_pac', 'dia_nasc', 'mes_nasc', 'ds_nome_mae1', 'ds_nome_mae2', 'nu_cns'),
+    64
+  )
+
+df <- df |> 
+  regras_linkage_dt(
+    c('ds_nome_pac', 'dt_nasc', 'ds_nome_mae', 'nao_recem_nasc'),
+    65
   )

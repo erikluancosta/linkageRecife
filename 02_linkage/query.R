@@ -274,10 +274,33 @@ linkage <- linkage |>
   mutate(nome_raro = n()) |> 
   ungroup() |> 
   mutate(nome_raro = ifelse(nome_raro == 2, 1, NA)) |> 
-  ungroup()
+  ungroup() |> 
+  mutate(
+    pac_13 = substr(ds_nome_pac, 1, 13),
+    mae_13 = substr(ds_nome_mae, 1, 13),
+    nu_tel_novo = coalesce(nu_tel_cel, nu_tel, nu_tel_contato),
+    tel_sem_ddd = str_remove_all(nu_tel_novo, "[^0-9]"),
+    tel_sem_ddd = if_else(
+      str_starts(tel_sem_ddd, "81"),
+      str_sub(tel_sem_ddd, 3),
+      tel_sem_ddd
+    ),
+    tel_sem_ddd = if_else(
+      tel_sem_ddd %in% c("000000000", "00000000000", "99999999999", "900000000", "98888888",
+                         "", "201101400", "20110100", "20110181", "20111000", "20111010",
+                         "201110100", "20111011",  "20112100", "21000000", "21000100", "21001101",
+                         "21010011", "21010100", "21011100", "21050000", "212105000",
+                         "2121050000", "0", "999999999", "6133152425", "999999990", "99999990",
+                         "33152425", "99999999", "988888888", "33552178"),
+      NA_character_,
+      tel_sem_ddd
+    )
+  )
 
 print('Novas variáveis criadas')
 
 gc()
 
 print('Base preparada para iniciar o linkage!')
+
+# 'ds_nome_pac', 'ds_nome_mae1_sound', 'ds_nomemae3', 'dia_nasc', 'ano_nasc', 'nu_tel_cel'

@@ -7,7 +7,8 @@ ajuste_txt2 <- function(df) {
                  "NAO INFORMADO","NAO INFORMADA", "NA", "ND", "NAO CONSTA",
                  "IGN", "NC", "XXXXX", "-----", "NAO IDENTIFICADO",
                  "NAO IDENTIFICADA", "NAO REGISTRADO", "NAO REGISTRADA",
-                 "NAO DIVULGADO", "N I", "SEM INFORMACOES", "NAO SOUBE INFORMAR")
+                 "NAO DIVULGADO", "N I", "SEM INFORMACOES", "NAO SOUBE INFORMAR", 
+                 "IDENTIDADE DESCONHECIDA", "INDENTIDADE DESCONHECIDA")
   
   # palavras-lixo típicas de recém-nascido / natimorto
   remover_rn <- "\\b(RN|FM1?|FMII?|IFM|RECEM NASCIDO|RN NASCIDO|NATIMORTO|NATIMORTI|FETO MORTO|FETO|MORTO|NASCIDO VIVO|VIVO|NASCIDO|SEM DOC|CADAVER|NATIMORTE|RECEM|IGNORADO|RECEM NASCIDO DE)\\b"
