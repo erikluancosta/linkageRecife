@@ -24,3 +24,7 @@ dbExecute(con, "
 tictoc::tic()
 dbAppendTable(con, "processo_linkage", df)
 tictoc::toc()
+
+
+
+
