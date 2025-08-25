@@ -48,3 +48,4 @@ registro_linkage_final <- bind_rows(registr_linkage, sinasc_linkage_2) |>
 
 
 
+

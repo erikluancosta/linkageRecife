@@ -123,7 +123,7 @@ sinasc_final <- df2 |>
   # mutate(id_pareamento=par_1_mae) |> 
   rename(
     "id_filho" = par_1_filho,
-    'id_mae' = par_1_mae
+    'id_pessoa_mae' = par_1_mae
   )
 
 #################
@@ -148,13 +148,13 @@ df <- df2 |>
   select(-id_pareamento_filho)
 
 
-id_mae <- sinasc_final |>
+id_pessoa_mae <- sinasc_final |>
   filter(!is.na(id_filho)) |>
-  select(id_filho, id_mae) |> 
+  select(id_filho, id_pessoa_mae) |> 
   rename(id_pessoa = id_filho)
 
 df <- df |>
-  left_join(id_mae, by = "id_pessoa")
+  left_join(id_pessoa_mae, by = "id_pessoa")
 
 rm(df2, linkada, sinasc_filho, sinasc_mae)
 
